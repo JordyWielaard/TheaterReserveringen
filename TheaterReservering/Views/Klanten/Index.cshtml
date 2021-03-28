@@ -1,0 +1,80 @@
+﻿@model IEnumerable<TheaterReservering.Models.Klant>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Naam)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Woonplaats)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                Reserveringen
+            </th>
+            <th>
+                Prijs
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Naam)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Woonplaats)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @for (int i = 0; i < item.Reserveringen.Count(); i++)
+                {
+                    @if (i != 0 && i % 4 == 0)
+                    {
+                        <br>
+                    }
+                    @if (item.Reserveringen[i] != null)
+                    {
+                        //eerste @ zegt c# in razorpage 2e @ spreekt model aan
+                        @:@item.Reserveringen[i].Naam
+                    }
+                    else
+                    {
+                        @Html.Raw("Geen")
+                    }
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Prijs)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-controller="Reserveringen" asp-action="EditWithKlantId" asp-route-id="@item.Id" class="btn btn-primary">Reserveren</a>
+            </td>
+        </tr>
+
+        }
+    </tbody>
+</table>
+<b>
+Aantal klanten is: @Model.Count()
+</b>

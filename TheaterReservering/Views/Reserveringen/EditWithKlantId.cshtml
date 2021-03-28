@@ -1,0 +1,64 @@
+﻿@model IEnumerable<TheaterReservering.Models.Reservering>
+
+@{
+    ViewData["Title"] = "TheaterReservering";
+    int count = 0;
+    int breete = 6;
+}
+
+<h1>Reserveren voor: @ViewData["klant"]</h1>
+
+
+    <form asp-action="EditWithKlantId" method="POST">
+        <input type="hidden" name="KlantId" value="@ViewData["klantId"]">
+        <table class="table text-center">
+            <thead>
+                <tr>
+                    @for (int i = 1; i <= breete; i++)
+                    {
+                        <td>
+                            @Html.Raw(i)
+                        </td>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    @foreach (var item in Model)
+                    {
+                        if (count++ % breete == 0)
+                        {
+                        @:</tr><tr>
+                        }
+                        <td class="text-white">
+                            @if ((int)ViewData["klantId"] == item.KlantId)
+                            {
+                                <input type="checkbox" checked="checked" name="reserveringId" value="@item.Id">
+                                <p class="bg-primary">@item.Naam</p>
+                            }
+                            else if (item.Bezet)
+                            {
+                                <input type="checkbox" checked="checked" disabled name="reserveringId" value="@item.Id">
+                                <p class="bg-danger">@item.Naam</p>
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="reserveringId" value="@item.Id">
+                                <p class="bg-success">@item.Naam</p>
+                            }
+
+                        </td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+        <input type="submit" value="joinkopslaan" class="btn btn-primary" asp-route-id="@ViewData["klantId"]"/>
+    </form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
